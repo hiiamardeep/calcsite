@@ -1,0 +1,316 @@
+/* ============================================
+   ANIMATIONS.CSS — CalcSite Motion System
+   ============================================ */
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.85; }
+}
+
+@keyframes countUp {
+  from { transform: translateY(6px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes numberTick {
+  0% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.animate-fadeIn { animation: fadeIn 0.4s ease both; }
+.animate-fadeInUp { animation: fadeInUp 0.5s ease both; }
+.animate-fadeInDown { animation: fadeInDown 0.4s ease both; }
+.animate-fadeInLeft { animation: fadeInLeft 0.4s ease both; }
+.animate-fadeInRight { animation: fadeInRight 0.4s ease both; }
+.animate-scaleIn { animation: scaleIn 0.4s var(--transition-spring) both; }
+.animate-slideIn { animation: slideIn 0.3s ease both; }
+.animate-slideUp { animation: slideUp 0.5s ease both; }
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+.animate-bounce { animation: bounce 1s ease-in-out infinite; }
+.animate-breathe { animation: breathe 4s ease-in-out infinite; }
+
+/* Animation delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.7s; }
+.delay-8 { animation-delay: 0.8s; }
+
+/* ============================================
+   SCROLL ANIMATIONS (JS-triggered)
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+/* ============================================
+   BUTTON EFFECTS
+   ============================================ */
+/* Ripple effect */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.5s linear;
+  background: rgba(255,255,255,0.25);
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* Hover glow shimmer */
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: none;
+}
+
+.btn-primary:hover::before {
+  animation: glimmer 0.6s ease;
+}
+
+/* ============================================
+   CALC BUTTON PRESS
+   ============================================ */
+.calc-btn.pressed {
+  animation: calcPress 0.12s ease;
+}
+
+@keyframes calcPress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+/* ============================================
+   RESULT NUMBER ANIMATION
+   ============================================ */
+.result-num-animate {
+  animation: countUp 0.3s ease;
+}
+
+/* ============================================
+   POMODORO STATES
+   ============================================ */
+.pomo-focus .progress-ring-fg { stroke: var(--primary-light); }
+.pomo-short-break .progress-ring-fg { stroke: var(--success); }
+.pomo-long-break .progress-ring-fg { stroke: var(--secondary); }
+
+.pomo-focus .timer-mode { color: var(--primary-light); }
+.pomo-short-break .timer-mode { color: var(--success); }
+.pomo-long-break .timer-mode { color: var(--secondary); }
+
+.pomo-tick {
+  animation: pomoPulse 1s ease-in-out;
+}
+
+@keyframes pomoPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.15); }
+}
+
+/* ============================================
+   SESSION DOTS
+   ============================================ */
+.session-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--divider);
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-spring);
+}
+
+.session-dot.complete {
+  background: var(--primary-light);
+  box-shadow: 0 0 10px rgba(162, 155, 254, 0.5);
+  border-color: var(--primary);
+}
+
+.session-dot.current {
+  background: var(--primary);
+  box-shadow: 0 0 15px rgba(108, 92, 231, 0.6);
+  border-color: var(--primary-light);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   STOPWATCH TICK
+   ============================================ */
+.sw-tick {
+  animation: swTick 0.1s ease;
+}
+
+@keyframes swTick {
+  from { transform: scale(1.01); }
+  to { transform: scale(1); }
+}
+
+/* ============================================
+   GRADIENT ANIMATED BACKGROUND
+   ============================================ */
+.grad-animated {
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+  background-size: 300% 300%;
+  animation: gradientShift 6s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   PAGE TRANSITION
+   ============================================ */
+.page-enter {
+  animation: fadeInUp 0.5s ease both;
+}
+
+/* ============================================
+   CHART LOAD ANIMATION
+   ============================================ */
+.chart-appear {
+  animation: scaleIn 0.6s var(--transition-spring) both;
+}
+
+/* ============================================
+   STAGGER CHILDREN
+   ============================================ */
+.stagger > *:nth-child(1) { animation-delay: 0s; }
+.stagger > *:nth-child(2) { animation-delay: 0.07s; }
+.stagger > *:nth-child(3) { animation-delay: 0.14s; }
+.stagger > *:nth-child(4) { animation-delay: 0.21s; }
+.stagger > *:nth-child(5) { animation-delay: 0.28s; }
+.stagger > *:nth-child(6) { animation-delay: 0.35s; }
+.stagger > *:nth-child(7) { animation-delay: 0.42s; }
+.stagger > *:nth-child(8) { animation-delay: 0.49s; }
+.stagger > *:nth-child(9) { animation-delay: 0.56s; }
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+.spinner {
+  width: 24px; height: 24px;
+  border: 3px solid var(--divider);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.spinner-lg {
+  width: 48px; height: 48px;
+  border-width: 4px;
+}
+
+/* ============================================
+   REDUCE MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .bg-orb { animation: none; }
+}

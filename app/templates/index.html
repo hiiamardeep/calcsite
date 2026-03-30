@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="page-section" style="padding-top: var(--space-3xl);">
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="page-hero animate-fadeInUp">
+      <div class="section-tag">⚡ Premium Tool Suite</div>
+      <h1 class="page-title">
+        Your Complete <span class="text-gradient">Productivity</span><br>
+        &amp; Calculator Hub
+      </h1>
+      <p class="page-subtitle">
+        Glassmorphic, lightning-fast tools for calculations, timers, and productivity — all running locally in your browser.
+      </p>
+      <div class="flex justify-center gap-md flex-wrap">
+        <a href="/calculator" class="btn btn-primary btn-lg btn-glow">🧮 Open Calculator</a>
+        <a href="/productivity" class="btn btn-ghost btn-lg">⏱️ Focus Timer</a>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="grid grid-4 mb-2xl stagger" style="margin-bottom: var(--space-2xl);">
+      <div class="stat-card animate-fadeInUp reveal">
+        <div class="stat-label">Tools Available</div>
+        <div class="stat-value text-gradient">9</div>
+        <div class="stat-sub">All free, no signup</div>
+      </div>
+      <div class="stat-card animate-fadeInUp reveal">
+        <div class="stat-label">Calculations Done</div>
+        <div class="stat-value text-gradient" id="calcCount">0</div>
+        <div class="stat-sub">This session</div>
+      </div>
+      <div class="stat-card animate-fadeInUp reveal">
+        <div class="stat-label">Focus Sessions</div>
+        <div class="stat-value text-gradient" id="focusSessions">0</div>
+        <div class="stat-sub">All time</div>
+      </div>
+      <div class="stat-card animate-fadeInUp reveal">
+        <div class="stat-label">Privacy</div>
+        <div class="stat-value" style="font-size:1.1rem; color:var(--success);">100% Local</div>
+        <div class="stat-sub">No data leaves device</div>
+      </div>
+    </div>
+
+    <!-- Tools Grid -->
+    <div class="section-header reveal">
+      <div class="section-tag">🛠️ All Tools</div>
+      <h2 class="section-title">Pick Your Tool</h2>
+      <p class="section-subtitle">Every calculator and timer you need, beautifully designed.</p>
+    </div>
+
+    <div class="tool-grid stagger">
+
+      <a href="/calculator" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon purple">🧮</div>
+        <h3>Calculator</h3>
+        <p>Full-featured scientific calculator with history, memory and keyboard support.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/emi" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon teal">🏦</div>
+        <h3>EMI Calculator</h3>
+        <p>Calculate loan EMI, total interest, and amortization schedule instantly.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/bmi" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon pink">❤️</div>
+        <h3>BMI Calculator</h3>
+        <p>Compute Body Mass Index with health category, ideal weight range, and tips.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/age" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon orange">🎂</div>
+        <h3>Age Calculator</h3>
+        <p>Find exact age in years, months, days, hours — and days until next birthday.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/percentage" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon green">%</div>
+        <h3>Percentage Calculator</h3>
+        <p>Percentage of, change, increase/decrease, and reverse percentage calculations.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/mf" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon purple">📈</div>
+        <h3>SIP / MF Calculator</h3>
+        <p>Project your mutual fund SIP returns with beautiful growth charts.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/productivity" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon teal">🍅</div>
+        <h3>Pomodoro Timer</h3>
+        <p>Classic 25-5-15 Pomodoro technique with circular progress and session tracking.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/productivity#stopwatch" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon pink">⏱️</div>
+        <h3>Stopwatch</h3>
+        <p>Millisecond-precision stopwatch with lap tracking and best/worst lap highlights.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+      <a href="/productivity#dashboard" class="tool-card animate-fadeInUp reveal">
+        <div class="tool-card-icon card-icon orange">📊</div>
+        <h3>Focus Dashboard</h3>
+        <p>Weekly focus time charts and session stats powered by your local data.</p>
+        <div class="tool-arrow">Open tool <span>→</span></div>
+      </a>
+
+    </div>
+
+    <!-- Feature Highlights -->
+    <div class="section-header reveal mt-2xl" style="margin-top: var(--space-3xl);">
+      <div class="section-tag">✨ Why CalcSite</div>
+      <h2 class="section-title">Built Different</h2>
+    </div>
+
+    <div class="grid grid-3 stagger">
+      <div class="card reveal animate-fadeInUp">
+        <div class="card-icon teal mb-md" style="margin-bottom: var(--space-md);">🔒</div>
+        <h3>100% Private</h3>
+        <p>All calculations happen in your browser. Nothing is sent to any server.</p>
+      </div>
+      <div class="card reveal animate-fadeInUp">
+        <div class="card-icon purple mb-md" style="margin-bottom: var(--space-md);">⚡</div>
+        <h3>Blazing Fast</h3>
+        <p>Pure vanilla JavaScript with no bloated frameworks. Instant results.</p>
+      </div>
+      <div class="card reveal animate-fadeInUp">
+        <div class="card-icon pink mb-md" style="margin-bottom: var(--space-md);">🎨</div>
+        <h3>Premium Design</h3>
+        <p>Glassmorphism UI with smooth animations and dark/light mode support.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Load stats from localStorage
+  document.getElementById('calcCount').textContent =
+    localStorage.getItem('cs-calc-count') || '0';
+  document.getElementById('focusSessions').textContent =
+    localStorage.getItem('cs-pomo-total') || '0';
+</script>
+{% endblock %}

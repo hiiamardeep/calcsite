@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}EMI Calculator{% endblock %}
+
+{% block content %}
+<div class="page-section">
+  <div class="container">
+
+    <div class="page-hero animate-fadeInUp" style="padding-bottom: var(--space-xl);">
+      <div class="section-tag">🏦 Loan Planner</div>
+      <h1 class="page-title">EMI <span class="text-gradient">Calculator</span></h1>
+      <p class="page-subtitle">Calculate monthly EMI, total interest payable, and view full amortization schedule.</p>
+    </div>
+
+    <div class="tool-layout" style="max-width:1000px; margin:0 auto;">
+
+      <!-- Input Panel -->
+      <div class="card animate-fadeInUp">
+        <div class="card-header">
+          <div style="display:flex; align-items:center; gap:var(--space-md);">
+            <div class="card-icon teal">🏦</div>
+            <div>
+              <h3 style="margin:0;">Loan Details</h3>
+              <p style="margin:0; font-size:0.8rem;">Enter your loan parameters</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:var(--space-xl);">
+
+          <!-- Loan Amount -->
+          <div class="form-group">
+            <label class="form-label" for="loanAmount">Loan Amount</label>
+            <div class="input-wrapper">
+              <span class="input-icon">₹</span>
+              <input type="number" class="form-input" id="loanAmount" placeholder="500000" min="1000" step="1000" value="500000">
+            </div>
+            <input type="range" class="form-range" id="loanAmountRange" min="10000" max="10000000" step="10000" value="500000">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+              <span>₹10K</span><span id="loanAmountDisplay">₹5,00,000</span><span>₹1Cr</span>
+            </div>
+          </div>
+
+          <!-- Interest Rate -->
+          <div class="form-group">
+            <label class="form-label" for="interestRate">Annual Interest Rate</label>
+            <div class="input-wrapper">
+              <span class="input-icon">%</span>
+              <input type="number" class="form-input" id="interestRate" placeholder="8.5" min="0.1" max="30" step="0.1" value="8.5">
+            </div>
+            <input type="range" class="form-range" id="interestRateRange" min="0.5" max="24" step="0.1" value="8.5">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+              <span>0.5%</span><span id="interestRateDisplay">8.5%</span><span>24%</span>
+            </div>
+          </div>
+
+          <!-- Loan Tenure -->
+          <div class="form-group">
+            <label class="form-label" for="loanTenure">Loan Tenure</label>
+            <div style="display:flex; gap:var(--space-sm);">
+              <input type="number" class="form-input" id="loanTenure" placeholder="20" min="1" max="30" value="20" style="flex:1;">
+              <div class="tabs" style="flex-shrink:0;">
+                <button class="tab-btn active" id="tenureYears" data-unit="years">Years</button>
+                <button class="tab-btn" id="tenureMonths" data-unit="months">Months</button>
+              </div>
+            </div>
+            <input type="range" class="form-range" id="loanTenureRange" min="1" max="30" step="1" value="20">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+              <span>1 Yr</span><span id="loanTenureDisplay">20 Years</span><span>30 Yrs</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-full btn-lg" id="calcEMI">Calculate EMI</button>
+        </div>
+      </div>
+
+      <!-- Results Panel -->
+      <div style="display:flex; flex-direction:column; gap:var(--space-lg);">
+
+        <!-- EMI Result -->
+        <div class="card animate-fadeInUp delay-2" id="emiResult" style="display:none;">
+          <div style="text-align:center; padding: var(--space-md) 0;">
+            <div style="font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:var(--space-sm);">Monthly EMI</div>
+            <div class="timer-display text-gradient" id="emiAmount" style="font-size:2.5rem; font-family:var(--font-mono);">₹0</div>
+          </div>
+          <hr class="divider">
+          <div class="result-grid">
+            <div class="result-item">
+              <div class="result-item-label">Principal</div>
+              <div class="result-item-value" id="principalAmt">₹0</div>
+            </div>
+            <div class="result-item">
+              <div class="result-item-label">Total Interest</div>
+              <div class="result-item-value" style="color:var(--warning);" id="totalInterest">₹0</div>
+            </div>
+            <div class="result-item">
+              <div class="result-item-label">Total Payment</div>
+              <div class="result-item-value" id="totalPayment">₹0</div>
+            </div>
+            <div class="result-item">
+              <div class="result-item-label">Interest %</div>
+              <div class="result-item-value" id="interestPct">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="card animate-fadeInUp delay-3" id="emiChartCard" style="display:none;">
+          <h4 style="margin-bottom:var(--space-lg);">Payment Breakdown</h4>
+          <div class="chart-wrapper" style="max-height:220px; display:flex; align-items:center; justify-content:center;">
+            <canvas id="emiChart" width="200" height="200"></canvas>
+          </div>
+          <div style="display:flex; justify-content:center; gap:var(--space-lg); margin-top:var(--space-md);">
+            <div style="display:flex; align-items:center; gap:var(--space-sm); font-size:0.8rem;">
+              <div style="width:12px;height:12px;border-radius:3px;background:var(--grad-primary);"></div>
+              <span style="color:var(--text-secondary);">Principal</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:var(--space-sm); font-size:0.8rem;">
+              <div style="width:12px;height:12px;border-radius:3px;background:var(--grad-accent);"></div>
+              <span style="color:var(--text-secondary);">Interest</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export -->
+        <div class="card animate-fadeInUp delay-4" id="emiExportCard" style="display:none;">
+          <h4 style="margin-bottom:var(--space-md);">Amortization Schedule</h4>
+          <div style="max-height:200px; overflow-y:auto;" id="amortTable"></div>
+          <button class="btn btn-ghost btn-full mt-md" id="exportCSV" style="margin-top:var(--space-md);">⬇ Export as CSV</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/emi.js') }}"></script>
+{% endblock %}

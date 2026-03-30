@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Percentage Calculator{% endblock %}
+{% block content %}
+<div class="page-section">
+  <div class="container">
+    <div class="page-hero animate-fadeInUp" style="padding-bottom: var(--space-xl);">
+      <div class="section-tag">% Math Made Easy</div>
+      <h1 class="page-title">Percentage <span class="text-gradient">Calculator</span></h1>
+      <p class="page-subtitle">All percentage calculations in one place — percent of, change, increase/decrease, and more.</p>
+    </div>
+    <div style="max-width:900px; margin:0 auto;">
+
+      <!-- Type Selector -->
+      <div class="tabs mb-xl animate-fadeInUp" id="pctTabs" style="margin-bottom:var(--space-xl);">
+        <button class="tab-btn active" data-pct="of">% Of</button>
+        <button class="tab-btn" data-pct="change">% Change</button>
+        <button class="tab-btn" data-pct="of-total">% of Total</button>
+        <button class="tab-btn" data-pct="increase">Increase by %</button>
+        <button class="tab-btn" data-pct="decrease">Decrease by %</button>
+        <button class="tab-btn" data-pct="reverse">Reverse %</button>
+      </div>
+
+      <div class="grid grid-2">
+
+        <!-- Input Card -->
+        <div class="card animate-fadeInUp">
+
+          <!-- Percent OF -->
+          <div id="pct-of" class="pct-panel">
+            <h3 style="margin-bottom:var(--space-xl);">What is <span class="text-gradient">X% of Y</span>?</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+              <div class="form-group">
+                <label class="form-label">Percentage (X)</label>
+                <div class="input-wrapper"><span class="input-icon">%</span><input type="number" class="form-input" id="pof-x" placeholder="25" value="25"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Of Number (Y)</label>
+                <input type="number" class="form-input" id="pof-y" placeholder="200" value="200">
+              </div>
+              <button class="btn btn-primary btn-full" onclick="calcPctOf()">Calculate</button>
+            </div>
+          </div>
+
+          <!-- Percent CHANGE -->
+          <div id="pct-change" class="pct-panel" style="display:none;">
+            <h3 style="margin-bottom:var(--space-xl);">Percentage <span class="text-gradient">Change</span></h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+              <div class="form-group"><label class="form-label">From (Old Value)</label><input type="number" class="form-input" id="pch-old" placeholder="100" value="100"></div>
+              <div class="form-group"><label class="form-label">To (New Value)</label><input type="number" class="form-input" id="pch-new" placeholder="120" value="120"></div>
+              <button class="btn btn-primary btn-full" onclick="calcPctChange()">Calculate</button>
+            </div>
+          </div>
+
+          <!-- Percent OF TOTAL -->
+          <div id="pct-of-total" class="pct-panel" style="display:none;">
+            <h3 style="margin-bottom:var(--space-xl);">X is what <span class="text-gradient">% of</span> Y?</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+              <div class="form-group"><label class="form-label">Part (X)</label><input type="number" class="form-input" id="pot-x" placeholder="50" value="50"></div>
+              <div class="form-group"><label class="form-label">Total (Y)</label><input type="number" class="form-input" id="pot-y" placeholder="200" value="200"></div>
+              <button class="btn btn-primary btn-full" onclick="calcPctOfTotal()">Calculate</button>
+            </div>
+          </div>
+
+          <!-- INCREASE by % -->
+          <div id="pct-increase" class="pct-panel" style="display:none;">
+            <h3 style="margin-bottom:var(--space-xl);">Increase by <span class="text-gradient">Percentage</span></h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+              <div class="form-group"><label class="form-label">Original Value</label><input type="number" class="form-input" id="pinc-val" placeholder="100" value="100"></div>
+              <div class="form-group"><label class="form-label">Increase by (%)</label><div class="input-wrapper"><span class="input-icon">%</span><input type="number" class="form-input" id="pinc-pct" placeholder="15" value="15"></div></div>
+              <button class="btn btn-primary btn-full" onclick="calcIncrease()">Calculate</button>
+            </div>
+          </div>
+
+          <!-- DECREASE by % -->
+          <div id="pct-decrease" class="pct-panel" style="display:none;">
+            <h3 style="margin-bottom:var(--space-xl);">Decrease by <span class="text-gradient">Percentage</span></h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+              <div class="form-group"><label class="form-label">Original Value</label><input type="number" class="form-input" id="pdec-val" placeholder="100" value="100"></div>
+              <div class="form-group"><label class="form-label">Decrease by (%)</label><div class="input-wrapper"><span class="input-icon">%</span><input type="number" class="form-input" id="pdec-pct" placeholder="20" value="20"></div></div>
+              <button class="btn btn-primary btn-full" onclick="calcDecrease()">Calculate</button>
+            </div>
+          </div>
+
+          <!-- REVERSE % -->
+          <div id="pct-reverse" class="pct-panel" style="display:none;">
+            <h3 style="margin-bottom:var(--space-xl);"><span class="text-gradient">Reverse</span> Percentage</h3>
+            <p style="font-size:0.85rem;margin-bottom:var(--space-xl);">Find the original value before a percentage was applied.</p>
+            <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+              <div class="form-group"><label class="form-label">Final Value</label><input type="number" class="form-input" id="prev-final" placeholder="115" value="115"></div>
+              <div class="form-group"><label class="form-label">Percentage Applied (%)</label><div class="input-wrapper"><span class="input-icon">%</span><input type="number" class="form-input" id="prev-pct" placeholder="15" value="15"></div></div>
+              <div class="form-group">
+                <label class="form-label">Direction</label>
+                <select class="form-select" id="prev-dir">
+                  <option value="increase">Was increased by %</option>
+                  <option value="decrease">Was decreased by %</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-full" onclick="calcReverse()">Calculate</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+          <div class="card animate-fadeInUp delay-2" id="pctResultCard">
+            <div style="text-align:center;padding:var(--space-xl) 0;">
+              <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:var(--space-md);">Result</div>
+              <div class="timer-display text-gradient" id="pctMainResult" style="font-size:3rem;font-family:var(--font-mono);">—</div>
+              <div id="pctSubResult" style="color:var(--text-muted);font-size:0.9rem;margin-top:var(--space-sm);"></div>
+            </div>
+            <div id="pctBreakdown" class="info-list" style="margin-top:var(--space-md);"></div>
+          </div>
+
+          <!-- Quick Reference -->
+          <div class="card animate-fadeInUp delay-3">
+            <h4 style="margin-bottom:var(--space-md);">Quick Reference</h4>
+            <div class="info-list">
+              <div class="info-row"><span class="info-row-label">1% of 100</span><span class="info-row-value">1</span></div>
+              <div class="info-row"><span class="info-row-label">10% of 1000</span><span class="info-row-value">100</span></div>
+              <div class="info-row"><span class="info-row-label">25% increase</span><span class="info-row-value">× 1.25</span></div>
+              <div class="info-row"><span class="info-row-label">50% decrease</span><span class="info-row-value">÷ 2</span></div>
+              <div class="info-row"><span class="info-row-label">GST (18%)</span><span class="info-row-value">× 1.18</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/percentage.js') }}"></script>
+{% endblock %}

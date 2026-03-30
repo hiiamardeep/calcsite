@@ -1,0 +1,177 @@
+/* ============================================
+   THEMES.CSS — CalcSite Theme Customization
+   ============================================ */
+
+/* ============================================
+   DARK THEME (DEFAULT) — Additional Styles
+   ============================================ */
+[data-theme="dark"] .card,
+:root:not([data-theme]) .card {
+  background: rgba(15, 22, 40, 0.7);
+}
+
+/* ============================================
+   LIGHT THEME — Overrides
+   ============================================ */
+[data-theme="light"] .card {
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 24px rgba(108, 92, 231, 0.08);
+}
+
+[data-theme="light"] .tool-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(108, 92, 231, 0.12);
+}
+
+[data-theme="light"] .tool-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(108, 92, 231, 0.35);
+}
+
+[data-theme="light"] .calc-btn {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(108, 92, 231, 0.12);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .calc-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .calc-display {
+  background: rgba(108, 92, 231, 0.05);
+  border-color: rgba(108, 92, 231, 0.1);
+}
+
+[data-theme="light"] .form-input,
+[data-theme="light"] .form-select {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(108, 92, 231, 0.15);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .form-input:focus,
+[data-theme="light"] .form-select:focus {
+  background: white;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.12);
+}
+
+[data-theme="light"] .navbar {
+  border-bottom-color: rgba(108, 92, 231, 0.1);
+}
+
+[data-theme="light"] .mobile-nav {
+  background: rgba(240, 244, 255, 0.97);
+}
+
+[data-theme="light"] .stat-card {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="light"] .stat-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .tabs {
+  background: rgba(108, 92, 231, 0.06);
+  border-color: rgba(108, 92, 231, 0.12);
+}
+
+[data-theme="light"] .tab-btn:not(.active):hover {
+  background: rgba(108, 92, 231, 0.08);
+}
+
+[data-theme="light"] .lap-item {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(108, 92, 231, 0.08);
+}
+
+[data-theme="light"] .info-row {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(108, 92, 231, 0.08);
+}
+
+[data-theme="light"] .result-item {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(108, 92, 231, 0.1);
+}
+
+[data-theme="light"] .modal {
+  background: #f8faff;
+  border-color: rgba(108, 92, 231, 0.15);
+}
+
+[data-theme="light"] .toast {
+  background: white;
+  border-color: rgba(108, 92, 231, 0.15);
+  box-shadow: 0 8px 30px rgba(108, 92, 231, 0.15);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: rgba(108, 92, 231, 0.05);
+}
+
+[data-theme="light"] .progress-ring-bg {
+  stroke: rgba(108, 92, 231, 0.1);
+}
+
+[data-theme="light"] .session-dot {
+  background: rgba(108, 92, 231, 0.1);
+  border-color: rgba(108, 92, 231, 0.2);
+}
+
+[data-theme="light"] .bg-orb-1 {
+  opacity: 0.2;
+}
+[data-theme="light"] .bg-orb-2 {
+  opacity: 0.15;
+}
+[data-theme="light"] .bg-orb-3 {
+  opacity: 0.1;
+}
+
+/* ============================================
+   THEME TRANSITION ANIMATION
+   ============================================ */
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease !important;
+}
+
+/* ============================================
+   THEME TOGGLE ICON STATES
+   ============================================ */
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ============================================
+   COLOR ACCENT THEMES (future expansion)
+   ============================================ */
+[data-accent="purple"] { --primary: #6c5ce7; --primary-light: #a29bfe; }
+[data-accent="blue"]   { --primary: #0984e3; --primary-light: #74b9ff; }
+[data-accent="pink"]   { --primary: #e84393; --primary-light: #fd79a8; }
+[data-accent="green"]  { --primary: #00b894; --primary-light: #55efc4; }
+[data-accent="orange"] { --primary: #e17055; --primary-light: #fab1a0; }
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .navbar, .bg-orb, #toast-container, .theme-toggle { display: none !important; }
+  .page-wrapper { padding-top: 0; }
+  .card {
+    border: 1px solid #ddd;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+  body { background: white; color: black; }
+}

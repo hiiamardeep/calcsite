@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}SIP Calculator{% endblock %}
+{% block content %}
+<div class="page-section">
+  <div class="container">
+    <div class="page-hero animate-fadeInUp" style="padding-bottom: var(--space-xl);">
+      <div class="section-tag">📈 Wealth Planner</div>
+      <h1 class="page-title">SIP / Mutual Fund <span class="text-gradient">Calculator</span></h1>
+      <p class="page-subtitle">Project your SIP investment returns with compounding and visualize your wealth journey.</p>
+    </div>
+
+    <div class="tool-layout" style="max-width:1100px; margin:0 auto;">
+
+      <!-- Input Panel -->
+      <div class="card animate-fadeInUp">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:var(--space-md);">
+            <div class="card-icon purple">📈</div>
+            <div><h3 style="margin:0;">Investment Details</h3><p style="margin:0;font-size:0.8rem;">Configure your SIP plan</p></div>
+          </div>
+        </div>
+
+        <div class="tabs mb-xl" id="sipTypeTabs" style="margin-bottom:var(--space-xl);">
+          <button class="tab-btn active" data-siptype="sip">Monthly SIP</button>
+          <button class="tab-btn" data-siptype="lumpsum">Lump Sum</button>
+          <button class="tab-btn" data-siptype="stepup">Step-Up SIP</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:var(--space-xl);">
+
+          <!-- Monthly Investment -->
+          <div class="form-group" id="sipMonthlyGroup">
+            <label class="form-label" for="sipAmount">Monthly Investment</label>
+            <div class="input-wrapper"><span class="input-icon">₹</span><input type="number" class="form-input" id="sipAmount" value="5000" min="100" step="100"></div>
+            <input type="range" class="form-range" id="sipAmountRange" min="500" max="200000" step="500" value="5000">
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);">
+              <span>₹500</span><span id="sipAmountDisplay">₹5,000 / mo</span><span>₹2L</span>
+            </div>
+          </div>
+
+          <!-- Lump Sum -->
+          <div class="form-group" id="lumpsumGroup" style="display:none;">
+            <label class="form-label" for="lumpsumAmount">Investment Amount</label>
+            <div class="input-wrapper"><span class="input-icon">₹</span><input type="number" class="form-input" id="lumpsumAmount" value="100000" min="1000"></div>
+          </div>
+
+          <!-- Step-Up % -->
+          <div class="form-group" id="stepupGroup" style="display:none;">
+            <label class="form-label" for="stepupPct">Annual Step-Up %</label>
+            <div class="input-wrapper"><span class="input-icon">%</span><input type="number" class="form-input" id="stepupPct" value="10" min="1" max="50"></div>
+          </div>
+
+          <!-- Expected Return -->
+          <div class="form-group">
+            <label class="form-label" for="sipReturn">Expected Annual Return</label>
+            <div class="input-wrapper"><span class="input-icon">%</span><input type="number" class="form-input" id="sipReturn" value="12" min="1" max="50" step="0.5"></div>
+            <input type="range" class="form-range" id="sipReturnRange" min="4" max="30" step="0.5" value="12">
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);">
+              <span>4%</span><span id="sipReturnDisplay">12% p.a.</span><span>30%</span>
+            </div>
+            <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-sm);">
+              <button class="btn btn-ghost btn-sm preset-return" data-val="8">Debt 8%</button>
+              <button class="btn btn-ghost btn-sm preset-return" data-val="12">Equity 12%</button>
+              <button class="btn btn-ghost btn-sm preset-return" data-val="15">Aggressive 15%</button>
+            </div>
+          </div>
+
+          <!-- Duration -->
+          <div class="form-group">
+            <label class="form-label" for="sipDuration">Investment Duration</label>
+            <div class="input-wrapper"><input type="number" class="form-input" id="sipDuration" value="10" min="1" max="40"><span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.85rem;">Years</span></div>
+            <input type="range" class="form-range" id="sipDurationRange" min="1" max="40" step="1" value="10">
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);">
+              <span>1 Yr</span><span id="sipDurationDisplay">10 Years</span><span>40 Yrs</span>
+            </div>
+          </div>
+
+          <!-- Inflation Toggle -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-md);background:var(--glass-bg);border-radius:var(--radius-md);border:1px solid var(--divider);">
+            <div>
+              <div style="font-weight:600;font-size:0.9rem;">Adjust for Inflation</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Assume 6% inflation</div>
+            </div>
+            <label style="position:relative;width:44px;height:24px;cursor:pointer;">
+              <input type="checkbox" id="inflationToggle" style="opacity:0;width:0;height:0;">
+              <span id="toggleTrack" style="position:absolute;inset:0;background:var(--divider);border-radius:12px;transition:0.3s;"></span>
+              <span id="toggleThumb" style="position:absolute;left:3px;top:3px;width:18px;height:18px;background:white;border-radius:50%;transition:0.3s;"></span>
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-full btn-lg" id="calcSIP">Calculate Returns</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+
+        <div class="card animate-fadeInUp delay-2" id="sipResultCard" style="display:none;">
+          <div style="text-align:center;padding:var(--space-md) 0 var(--space-lg);">
+            <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:var(--space-sm);">Future Value</div>
+            <div class="timer-display text-gradient" id="sipFutureValue" style="font-size:2.5rem;font-family:var(--font-mono);">₹0</div>
+            <div id="sipRealValue" style="color:var(--text-muted);font-size:0.85rem;margin-top:4px;display:none;"></div>
+          </div>
+          <div class="result-grid">
+            <div class="result-item"><div class="result-item-label">Invested</div><div class="result-item-value" id="sipInvested">₹0</div></div>
+            <div class="result-item"><div class="result-item-label">Est. Returns</div><div class="result-item-value" style="color:var(--success);" id="sipReturns">₹0</div></div>
+            <div class="result-item"><div class="result-item-label">Wealth Ratio</div><div class="result-item-value" id="sipWealthRatio">0×</div></div>
+            <div class="result-item"><div class="result-item-label">XIRR</div><div class="result-item-value" id="sipXIRR">0%</div></div>
+          </div>
+        </div>
+
+        <!-- Growth Chart -->
+        <div class="card animate-fadeInUp delay-3" id="sipChartCard" style="display:none;">
+          <h4 style="margin-bottom:var(--space-lg);">Wealth Growth Over Time</h4>
+          <div class="chart-wrapper">
+            <canvas id="sipChart" height="220"></canvas>
+          </div>
+          <div style="display:flex;justify-content:center;gap:var(--space-lg);margin-top:var(--space-md);">
+            <div style="display:flex;align-items:center;gap:var(--space-sm);font-size:0.8rem;">
+              <div style="width:12px;height:12px;border-radius:3px;background:var(--grad-primary);"></div>
+              <span style="color:var(--text-secondary);">Invested</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-sm);font-size:0.8rem;">
+              <div style="width:12px;height:12px;border-radius:3px;background:var(--grad-success);"></div>
+              <span style="color:var(--text-secondary);">Wealth</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Year-by-Year -->
+        <div class="card animate-fadeInUp delay-4" id="sipTableCard" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+            <h4>Year-by-Year Breakdown</h4>
+            <button class="btn btn-ghost btn-sm" id="exportSIPCSV">⬇ CSV</button>
+          </div>
+          <div style="max-height:220px;overflow-y:auto;" id="sipTable"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/mf.js') }}"></script>
+{% endblock %}

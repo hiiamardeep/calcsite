@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CalcSite — Premium productivity tools & calculators">
+  <meta name="theme-color" content="#6c5ce7">
+  <title>{% block title %}CalcSite{% endblock %} — Premium Calculators</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}">
+  {% block extra_css %}{% endblock %}
+
+  <!-- PWA -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+</head>
+<body>
+  <!-- Background Orbs -->
+  <div class="bg-orb bg-orb-1" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb-2" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb-3" aria-hidden="true"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar-inner">
+      <!-- Logo -->
+      <a href="/" class="navbar-logo" aria-label="CalcSite Home">
+        <div class="logo-icon" aria-hidden="true">⚡</div>
+        Calc<span>Site</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <ul class="navbar-nav" role="list">
+        <li><a href="/calculator" class="nav-link {% if request.endpoint == 'calculator.calculator' %}active{% endif %}">🧮 Calculator</a></li>
+        <li><a href="/emi" class="nav-link {% if request.endpoint == 'emi.emi' %}active{% endif %}">🏦 EMI</a></li>
+        <li><a href="/bmi" class="nav-link {% if request.endpoint == 'bmi.bmi' %}active{% endif %}">❤️ BMI</a></li>
+        <li><a href="/age" class="nav-link {% if request.endpoint == 'age.age' %}active{% endif %}">🎂 Age</a></li>
+        <li><a href="/percentage" class="nav-link {% if request.endpoint == 'percentage.percentage' %}active{% endif %}">% Pct</a></li>
+        <li><a href="/mf" class="nav-link {% if request.endpoint == 'mf.mf' %}active{% endif %}">📈 SIP</a></li>
+        <li><a href="/productivity" class="nav-link {% if request.endpoint == 'productivity.productivity' %}active{% endif %}">⏱️ Focus</a></li>
+      </ul>
+
+      <!-- Actions -->
+      <div class="navbar-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
+          <span class="icon-moon" aria-hidden="true">🌙</span>
+          <span class="icon-sun" aria-hidden="true">☀️</span>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile navigation">
+    <a href="/calculator" class="nav-link">🧮 Calculator</a>
+    <a href="/emi" class="nav-link">🏦 EMI Calculator</a>
+    <a href="/bmi" class="nav-link">❤️ BMI Calculator</a>
+    <a href="/age" class="nav-link">🎂 Age Calculator</a>
+    <a href="/percentage" class="nav-link">% Percentage</a>
+    <a href="/mf" class="nav-link">📈 SIP / Mutual Fund</a>
+    <a href="/productivity" class="nav-link">⏱️ Focus & Productivity</a>
+  </div>
+
+  <!-- Page Content -->
+  <main class="page-wrapper content-layer" id="mainContent">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="content-layer" style="border-top:1px solid var(--divider); padding: var(--space-xl) 0; margin-top: var(--space-3xl);">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md);">
+      <div style="display:flex; align-items:center; gap:var(--space-sm);">
+        <div class="logo-icon" style="width:28px;height:28px;font-size:0.8rem;background:var(--grad-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;">⚡</div>
+        <span style="font-weight:700; color:var(--text-primary);">CalcSite</span>
+        <span style="color:var(--text-muted);font-size:0.8rem;">— Premium Productivity Suite</span>
+
+          <!-- Support Button -->
+<a href="{{ config['SUPPORT_URL'] }}" target="_blank"
+   style="padding:8px 16px; border-radius:8px; background:var(--grad-primary); color:#fff; font-size:0.85rem; font-weight:600; text-decoration:none;">
+   ☕ Support
+</a>
+
+      </div>
+      <p style="color:var(--text-muted); font-size:0.8rem; margin:0;">Built with ❤️ · All calculations run locally · No data stored on servers</p>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Core JS -->
+  <script>
+    // Theme Management
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('cs-theme', theme);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('cs-theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.add('theme-transitioning');
+      const current = html.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+      setTimeout(() => html.classList.remove('theme-transitioning'), 400);
+    });
+
+    // Mobile nav
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileNav.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Close mobile nav on link click
+    mobileNav.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', false);
+      });
+    });
+
+    // Toast system
+    window.showToast = function(msg, type = 'info', duration = 3000) {
+      const icons = { success: '✓', error: '✕', info: 'ℹ', warning: '⚠' };
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="toast-icon">${icons[type] || 'ℹ'}</div>
+        <span class="toast-msg">${msg}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('leaving');
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    };
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Ripple effect on buttons
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const ripple = document.createElement('span');
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 2;
+      ripple.className = 'btn-ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 500);
+    });
+  </script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}BMI Calculator{% endblock %}
+
+{% block content %}
+<div class="page-section">
+  <div class="container">
+
+    <div class="page-hero animate-fadeInUp" style="padding-bottom: var(--space-xl);">
+      <div class="section-tag">❤️ Health Check</div>
+      <h1 class="page-title">BMI <span class="text-gradient-teal">Calculator</span></h1>
+      <p class="page-subtitle">Calculate your Body Mass Index, health category, and ideal weight range.</p>
+    </div>
+
+    <div class="center-layout">
+
+      <div class="card animate-fadeInUp" style="margin-bottom: var(--space-xl);">
+        <div class="card-header">
+          <div style="display:flex; align-items:center; gap:var(--space-md);">
+            <div class="card-icon pink">❤️</div>
+            <div><h3 style="margin:0;">Your Details</h3></div>
+          </div>
+          <div class="tabs" id="unitTabs">
+            <button class="tab-btn active" data-unit="metric">Metric</button>
+            <button class="tab-btn" data-unit="imperial">Imperial</button>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:var(--space-xl);">
+
+          <!-- Gender -->
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-sm);">
+              <button class="btn btn-ghost gender-btn active" data-gender="male" id="genderMale">👨 Male</button>
+              <button class="btn btn-ghost gender-btn" data-gender="female" id="genderFemale">👩 Female</button>
+            </div>
+          </div>
+
+          <!-- Age -->
+          <div class="form-group">
+            <label class="form-label" for="bmiAge">Age (years)</label>
+            <input type="number" class="form-input" id="bmiAge" placeholder="25" min="2" max="120" value="25">
+          </div>
+
+          <!-- Height — Metric -->
+          <div class="form-group" id="heightMetric">
+            <label class="form-label" for="heightCm">Height (cm)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📏</span>
+              <input type="number" class="form-input" id="heightCm" placeholder="170" min="50" max="250" value="170">
+            </div>
+            <input type="range" class="form-range" min="100" max="220" step="1" id="heightCmRange" value="170">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+              <span>100cm</span><span id="heightCmDisplay">170 cm</span><span>220cm</span>
+            </div>
+          </div>
+
+          <!-- Height — Imperial -->
+          <div class="form-group" id="heightImperial" style="display:none;">
+            <label class="form-label">Height</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-sm);">
+              <div class="input-wrapper">
+                <input type="number" class="form-input" id="heightFt" placeholder="5" min="1" max="8" value="5">
+                <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.8rem;">ft</span>
+              </div>
+              <div class="input-wrapper">
+                <input type="number" class="form-input" id="heightIn" placeholder="7" min="0" max="11" value="7">
+                <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.8rem;">in</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weight — Metric -->
+          <div class="form-group" id="weightMetric">
+            <label class="form-label" for="weightKg">Weight (kg)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">⚖️</span>
+              <input type="number" class="form-input" id="weightKg" placeholder="70" min="10" max="300" value="70">
+            </div>
+            <input type="range" class="form-range" min="30" max="200" step="0.5" id="weightKgRange" value="70">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+              <span>30kg</span><span id="weightKgDisplay">70 kg</span><span>200kg</span>
+            </div>
+          </div>
+
+          <!-- Weight — Imperial -->
+          <div class="form-group" id="weightImperial" style="display:none;">
+            <label class="form-label" for="weightLbs">Weight (lbs)</label>
+            <input type="number" class="form-input" id="weightLbs" placeholder="154" min="20" max="660" value="154">
+          </div>
+
+          <button class="btn btn-primary btn-full btn-lg" id="calcBMI">Calculate BMI</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="bmiResults" style="display:none;">
+        <div class="card animate-scaleIn mb-lg" style="margin-bottom:var(--space-lg);">
+          <div style="text-align:center; padding:var(--space-md) 0;">
+            <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:var(--space-sm);">Your BMI Score</div>
+            <div class="timer-display" id="bmiValue" style="font-size:3.5rem; font-family:var(--font-mono);">0.0</div>
+            <div id="bmiCategory" class="badge badge-primary" style="margin-top:var(--space-sm); font-size:0.85rem; padding:6px 16px;">—</div>
+          </div>
+
+          <!-- BMI Gauge -->
+          <div style="margin:var(--space-xl) 0 var(--space-md);">
+            <div class="bmi-gauge">
+              <div class="bmi-needle" id="bmiNeedle" style="left:0%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); margin-top:4px;">
+              <span>Underweight<br>&lt;18.5</span>
+              <span style="text-align:center;">Normal<br>18.5–24.9</span>
+              <span style="text-align:center;">Overweight<br>25–29.9</span>
+              <span style="text-align:right;">Obese<br>&gt;30</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-grid mb-lg" style="margin-bottom:var(--space-lg);">
+          <div class="result-item">
+            <div class="result-item-label">Ideal Weight</div>
+            <div class="result-item-value" id="idealWeight">—</div>
+            <div class="result-item-sub">Healthy range</div>
+          </div>
+          <div class="result-item">
+            <div class="result-item-label">Weight to Lose</div>
+            <div class="result-item-value" id="weightDiff">—</div>
+            <div class="result-item-sub">To reach normal</div>
+          </div>
+          <div class="result-item">
+            <div class="result-item-label">BMI Prime</div>
+            <div class="result-item-value" id="bmiPrime">—</div>
+            <div class="result-item-sub">Ratio to 25</div>
+          </div>
+          <div class="result-item">
+            <div class="result-item-label">Ponderal Index</div>
+            <div class="result-item-value" id="ponderalIndex">—</div>
+          </div>
+        </div>
+
+        <div class="card animate-fadeInUp" id="bmiAdvice">
+          <h4 style="margin-bottom:var(--space-md);">Health Insights</h4>
+          <p id="bmiAdviceText" style="line-height:1.7;"></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/bmi.js') }}"></script>
+{% endblock %}

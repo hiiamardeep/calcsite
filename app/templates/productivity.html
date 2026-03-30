@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block title %}Focus & Productivity{% endblock %}
+{% block content %}
+<div class="page-section">
+  <div class="container">
+
+    <div class="page-hero animate-fadeInUp" style="padding-bottom: var(--space-xl);">
+      <div class="section-tag">⏱️ Focus Tools</div>
+      <h1 class="page-title">Productivity <span class="text-gradient-teal">Suite</span></h1>
+      <p class="page-subtitle">Pomodoro timer, precision stopwatch, and focus analytics — all in one place.</p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tabs mb-2xl animate-fadeInUp" id="prodTabs" style="margin-bottom:var(--space-2xl); justify-content:center; display:flex;">
+      <button class="tab-btn active" data-prod="pomodoro">🍅 Pomodoro</button>
+      <button class="tab-btn" data-prod="stopwatch" id="swTabBtn">⏱️ Stopwatch</button>
+      <button class="tab-btn" data-prod="dashboard" id="dashTabBtn">📊 Dashboard</button>
+    </div>
+
+    <!-- ============================
+         POMODORO SECTION
+         ============================ -->
+    <div id="panel-pomodoro" class="prod-panel">
+      <div style="max-width:720px; margin:0 auto;">
+        <div class="grid grid-2" style="gap:var(--space-xl); align-items:start;">
+
+          <!-- Timer Card -->
+          <div class="card animate-fadeInUp pomo-focus" id="pomodoroCard">
+            <div style="text-align:center;">
+
+              <!-- Mode Badge -->
+              <div class="badge badge-primary mb-md" id="pomoBadge" style="margin-bottom:var(--space-md);">🎯 FOCUS TIME</div>
+
+              <!-- Circular Progress -->
+              <div class="progress-ring-container mb-lg" style="margin-bottom:var(--space-lg);">
+                <svg class="progress-ring-svg" width="220" height="220" viewBox="0 0 220 220">
+                  <circle class="progress-ring-bg" cx="110" cy="110" r="96" stroke-width="8"/>
+                  <circle class="progress-ring-fg" id="pomodoroRing" cx="110" cy="110" r="96"
+                    stroke-width="8"
+                    stroke="#a29bfe"
+                    stroke-dasharray="603.19"
+                    stroke-dashoffset="0"/>
+                </svg>
+                <div class="progress-ring-content">
+                  <div class="timer-display" id="pomodoroDisplay">25:00</div>
+                  <div class="timer-mode" id="pomodoroMode">Focus</div>
+                </div>
+              </div>
+
+              <!-- Session Dots -->
+              <div style="display:flex;justify-content:center;gap:var(--space-sm);margin-bottom:var(--space-xl);">
+                <div class="session-dot current" id="dot1"></div>
+                <div class="session-dot" id="dot2"></div>
+                <div class="session-dot" id="dot3"></div>
+                <div class="session-dot" id="dot4"></div>
+              </div>
+
+              <!-- Controls -->
+              <div style="display:flex;justify-content:center;gap:var(--space-md);">
+                <button class="btn btn-ghost btn-icon" id="pomoPrev" title="Previous">⏮</button>
+                <button class="btn btn-primary" id="pomoStart" style="min-width:120px; font-size:1rem;">▶ Start</button>
+                <button class="btn btn-ghost btn-icon" id="pomoSkip" title="Skip">⏭</button>
+              </div>
+              <button class="btn btn-ghost btn-sm mt-md" id="pomoReset" style="margin-top:var(--space-md);">↺ Reset</button>
+            </div>
+          </div>
+
+          <!-- Settings & Stats -->
+          <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+
+            <!-- Settings -->
+            <div class="card animate-fadeInUp delay-2">
+              <h4 style="margin-bottom:var(--space-lg);">⚙️ Timer Settings</h4>
+              <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+                <div class="form-group">
+                  <label class="form-label">Focus Duration (min)</label>
+                  <input type="number" class="form-input" id="focusDur" value="25" min="1" max="90">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Short Break (min)</label>
+                  <input type="number" class="form-input" id="shortBreakDur" value="5" min="1" max="30">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Long Break (min)</label>
+                  <input type="number" class="form-input" id="longBreakDur" value="15" min="5" max="60">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Sessions until Long Break</label>
+                  <input type="number" class="form-input" id="sessionsUntilLong" value="4" min="2" max="8">
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-md);background:var(--glass-bg);border-radius:var(--radius-md);border:1px solid var(--divider);">
+                  <span style="font-size:0.9rem;font-weight:500;">🔔 Sound Alert</span>
+                  <label style="position:relative;width:44px;height:24px;cursor:pointer;">
+                    <input type="checkbox" id="soundToggle" checked style="opacity:0;width:0;height:0;">
+                    <span id="soundTrack" style="position:absolute;inset:0;background:var(--primary);border-radius:12px;transition:0.3s;"></span>
+                    <span style="position:absolute;right:3px;top:3px;width:18px;height:18px;background:white;border-radius:50%;transition:0.3s;"></span>
+                  </label>
+                </div>
+                <button class="btn btn-ghost btn-full" id="applyPomoSettings">Apply Settings</button>
+              </div>
+            </div>
+
+            <!-- Today's Stats -->
+            <div class="card animate-fadeInUp delay-3">
+              <h4 style="margin-bottom:var(--space-lg);">📊 Today's Stats</h4>
+              <div class="result-grid" style="grid-template-columns:1fr 1fr;">
+                <div class="result-item">
+                  <div class="result-item-label">Sessions</div>
+                  <div class="result-item-value text-gradient" id="todaySessions">0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Focus Time</div>
+                  <div class="result-item-value text-gradient-teal" id="todayFocusTime">0m</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Session Log -->
+        <div class="card mt-xl animate-fadeInUp delay-4" style="margin-top:var(--space-xl);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-lg);">
+            <h4>📋 Session History</h4>
+            <button class="btn btn-ghost btn-sm" id="clearPomoHistory">Clear</button>
+          </div>
+          <div id="pomoHistory" style="display:flex;flex-direction:column;gap:var(--space-sm);max-height:200px;overflow-y:auto;">
+            <p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:var(--space-lg) 0;">Complete a session to see history</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         STOPWATCH SECTION
+         ============================ -->
+    <div id="panel-stopwatch" class="prod-panel" style="display:none;">
+      <div class="center-layout">
+        <div class="card animate-fadeInUp">
+          <div class="stopwatch-display" id="swDisplay">00:00:00.000</div>
+
+          <div style="display:flex;justify-content:center;gap:var(--space-md);margin-bottom:var(--space-xl);">
+            <button class="btn btn-ghost btn-icon" id="swLap" title="Lap" disabled>🏁</button>
+            <button class="btn btn-primary" id="swStartStop" style="min-width:130px;font-size:1rem;">▶ Start</button>
+            <button class="btn btn-ghost btn-icon" id="swReset" title="Reset" disabled>↺</button>
+          </div>
+
+          <!-- Lap Stats -->
+          <div id="lapStats" style="display:none;margin-bottom:var(--space-lg);">
+            <div class="result-grid" style="grid-template-columns:repeat(3,1fr);">
+              <div class="result-item"><div class="result-item-label">Laps</div><div class="result-item-value" id="lapCount">0</div></div>
+              <div class="result-item"><div class="result-item-label">Best Lap</div><div class="result-item-value" style="color:var(--success);" id="bestLap">—</div></div>
+              <div class="result-item"><div class="result-item-label">Worst Lap</div><div class="result-item-value" style="color:var(--warning);" id="worstLap">—</div></div>
+            </div>
+          </div>
+
+          <!-- Lap List -->
+          <div class="lap-list" id="lapList" style="max-height:280px;overflow-y:auto;">
+            <p id="lapEmpty" style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:var(--space-xl) 0;">Hit 🏁 to record a lap</p>
+          </div>
+
+          <!-- Export -->
+          <div id="swExportRow" style="display:none;margin-top:var(--space-lg);">
+            <button class="btn btn-ghost btn-full" id="exportLaps">⬇ Export Laps as CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         DASHBOARD SECTION
+         ============================ -->
+    <div id="panel-dashboard" class="prod-panel" style="display:none;">
+      <div style="max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:var(--space-xl);">
+
+        <!-- Total Stats -->
+        <div class="grid grid-4 stagger">
+          <div class="stat-card animate-fadeInUp"><div class="stat-label">Total Sessions</div><div class="stat-value text-gradient" id="dashTotalSessions">0</div><div class="stat-sub">All time</div></div>
+          <div class="stat-card animate-fadeInUp"><div class="stat-label">Focus Hours</div><div class="stat-value text-gradient-teal" id="dashFocusHours">0h</div><div class="stat-sub">All time</div></div>
+          <div class="stat-card animate-fadeInUp"><div class="stat-label">This Week</div><div class="stat-value text-gradient-accent" id="dashWeekSessions">0</div><div class="stat-sub">Sessions</div></div>
+          <div class="stat-card animate-fadeInUp"><div class="stat-label">Best Day</div><div class="stat-value" id="dashBestDay" style="font-size:1.1rem;">—</div><div class="stat-sub">Most sessions</div></div>
+        </div>
+
+        <!-- Weekly Line Chart -->
+        <div class="card animate-fadeInUp delay-2">
+          <h4 style="margin-bottom:var(--space-lg);">📅 Weekly Focus Time (minutes)</h4>
+          <div class="chart-wrapper">
+            <canvas id="weeklyChart" height="180"></canvas>
+          </div>
+        </div>
+
+        <!-- Daily Sessions Bar Chart -->
+        <div class="card animate-fadeInUp delay-3">
+          <h4 style="margin-bottom:var(--space-lg);">📊 Daily Sessions — Last 14 Days</h4>
+          <div class="chart-wrapper">
+            <canvas id="dailyChart" height="180"></canvas>
+          </div>
+        </div>
+
+        <!-- Heatmap / Activity Log -->
+        <div class="card animate-fadeInUp delay-4">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-lg);">
+            <h4>🗓️ Recent Activity Log</h4>
+            <button class="btn btn-danger btn-sm" id="clearAllData">🗑 Clear All Data</button>
+          </div>
+          <div id="activityLog" style="display:flex;flex-direction:column;gap:var(--space-sm);max-height:250px;overflow-y:auto;">
+            <p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:var(--space-xl) 0;">No activity yet — complete a Pomodoro session!</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/pomodoro.js') }}"></script>
+<script src="{{ url_for('static', filename='js/stopwatch.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+  // Tab switching for productivity page
+  const prodTabs = document.getElementById('prodTabs');
+  const panels = document.querySelectorAll('.prod-panel');
+
+  prodTabs.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      prodTabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.prod;
+      panels.forEach(p => p.style.display = 'none');
+      document.getElementById(`panel-${target}`).style.display = 'block';
+      if (target === 'dashboard') initDashboard();
+    });
+  });
+
+  // Handle URL hash
+  const hash = window.location.hash.replace('#', '');
+  if (['stopwatch', 'dashboard'].includes(hash)) {
+    prodTabs.querySelector(`[data-prod="${hash}"]`).click();
+  }
+</script>
+{% endblock %}

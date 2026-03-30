@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Age Calculator{% endblock %}
+{% block content %}
+<div class="page-section">
+  <div class="container">
+    <div class="page-hero animate-fadeInUp" style="padding-bottom: var(--space-xl);">
+      <div class="section-tag">🎂 Exact Age</div>
+      <h1 class="page-title">Age <span class="text-gradient-accent">Calculator</span></h1>
+      <p class="page-subtitle">Find your exact age in years, months, days, hours, minutes — and days until your next birthday.</p>
+    </div>
+    <div class="center-layout">
+      <div class="card animate-fadeInUp" style="margin-bottom:var(--space-xl);">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:var(--space-md);">
+            <div class="card-icon orange">🎂</div>
+            <div><h3 style="margin:0;">Enter Dates</h3></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-xl);">
+          <div class="form-group">
+            <label class="form-label" for="birthDate">Date of Birth</label>
+            <input type="date" class="form-input" id="birthDate" max="">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="targetDate">Calculate Age As Of</label>
+            <input type="date" class="form-input" id="targetDate">
+          </div>
+          <button class="btn btn-primary btn-full btn-lg" id="calcAge">Calculate Age</button>
+        </div>
+      </div>
+
+      <div id="ageResults" style="display:none;">
+        <div class="card animate-scaleIn mb-lg" style="margin-bottom:var(--space-lg);">
+          <div style="text-align:center; padding:var(--space-md) 0 var(--space-lg);">
+            <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:var(--space-md);">You are</div>
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:var(--space-sm);flex-wrap:wrap;">
+              <div style="text-align:center;">
+                <div class="timer-display text-gradient-accent" id="ageYears" style="font-size:4rem;font-family:var(--font-mono);">0</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Years</div>
+              </div>
+              <div style="color:var(--text-muted);font-size:2rem;margin: 0 var(--space-sm);">:</div>
+              <div style="text-align:center;">
+                <div class="timer-display" id="ageMonths" style="font-size:4rem;font-family:var(--font-mono);">0</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Months</div>
+              </div>
+              <div style="color:var(--text-muted);font-size:2rem;margin: 0 var(--space-sm);">:</div>
+              <div style="text-align:center;">
+                <div class="timer-display" id="ageDays" style="font-size:4rem;font-family:var(--font-mono);">0</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Days</div>
+              </div>
+            </div>
+          </div>
+          <div class="result-grid">
+            <div class="result-item"><div class="result-item-label">Total Months</div><div class="result-item-value" id="totalMonths">0</div></div>
+            <div class="result-item"><div class="result-item-label">Total Weeks</div><div class="result-item-value" id="totalWeeks">0</div></div>
+            <div class="result-item"><div class="result-item-label">Total Days</div><div class="result-item-value" id="totalDays">0</div></div>
+            <div class="result-item"><div class="result-item-label">Total Hours</div><div class="result-item-value" id="totalHours">0</div></div>
+          </div>
+        </div>
+        <div class="card animate-fadeInUp">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md);">
+            <div>
+              <h4 style="margin-bottom:4px;">🎉 Next Birthday</h4>
+              <p style="margin:0;font-size:0.85rem;color:var(--text-muted);" id="nextBirthdayDate">—</p>
+            </div>
+            <div style="text-align:right;">
+              <div class="timer-display text-gradient" id="daysUntilBirthday" style="font-size:2.5rem;font-family:var(--font-mono);">0</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);">days away</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/age.js') }}"></script>
+{% endblock %}
